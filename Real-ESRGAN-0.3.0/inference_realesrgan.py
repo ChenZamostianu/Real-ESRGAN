@@ -140,6 +140,10 @@ def main():
         else:
             img_mode = None
 
+        # Apply median filter before upscaling
+        kernel_size = 5  # Set kernel size for the median filter (must be an odd number)
+        img = cv2.medianBlur(img, kernel_size)
+
         try:
             if args.face_enhance:
                 _, _, output = face_enhancer.enhance(img, has_aligned=False, only_center_face=False, paste_back=True)
@@ -158,9 +162,8 @@ def main():
             if args.suffix == '':
                 save_path = os.path.join(args.output, f'{imgname}.{extension}')
             else:
-                save_path = os.path.join(args.output, f'{imgname}_{args.suffix}.{extension}')
-            cv2.imwrite(str(save_path), output)
-
+                save_path = os.path.join(args.output, f'{imgname}_upscale095median.{extension}')
+            cv2.imwrite(save_path, output,[cv2.IMWRITE_JPEG_QUALITY,95])
 
 if __name__ == '__main__':
     main()
